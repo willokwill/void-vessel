@@ -1,4 +1,4 @@
-'use client'; // 重要：這一行是 Next.js 互動組件必須的
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { 
@@ -15,8 +15,32 @@ import {
   Mail
 } from 'lucide-react';
 
-// --- Global Styles for Custom Animations ---
-// 更新說明：已改用標準 React 方式注入 CSS，解決了 "jsx" 和 "global" 屬性的報錯問題
+// --- Types (解決 TypeScript 報錯的關鍵) ---
+interface Product {
+  id: number;
+  brand: string;
+  name: string;
+  price: number;
+  image: string;
+  tag: string | null;
+}
+
+interface Story {
+  id: number;
+  category: string;
+  title: string;
+  image: string;
+}
+
+interface FeatureBannerProps {
+  title: string;
+  subtitle: string;
+  image: string;
+  align?: string;
+  dark?: boolean;
+}
+
+// --- Global Styles ---
 const GlobalStyles = () => (
   <style dangerouslySetInnerHTML={{ __html: `
     @keyframes scroll {
@@ -40,11 +64,11 @@ const GlobalStyles = () => (
 );
 
 // --- Mock Data ---
-const CATEGORIES = ["Men", "Women", "Lifestyle", "Beauty", "Brands", "Launches", "Sale"];
+const CATEGORIES: string[] = ["Men", "Women", "Lifestyle", "Beauty", "Brands", "Launches", "Sale"];
 
-const BRANDS = ["NIKE", "STUSSY", "OUR LEGACY", "CARHARTT WIP", "BEAMS PLUS", "SNOW PEAK", "VOID & VESSEL", "ROA", "SALOMON", "NEEDLES"];
+const BRANDS: string[] = ["NIKE", "STUSSY", "OUR LEGACY", "CARHARTT WIP", "BEAMS PLUS", "SNOW PEAK", "VOID & VESSEL", "ROA", "SALOMON", "NEEDLES"];
 
-const PRODUCTS = [
+const PRODUCTS: Product[] = [
   {
     id: 1,
     brand: "VOID & VESSEL",
@@ -79,7 +103,7 @@ const PRODUCTS = [
   }
 ];
 
-const STORIES = [
+const STORIES: Story[] = [
   {
     id: 1,
     category: "LIFESTYLE",
@@ -102,7 +126,7 @@ const STORIES = [
 
 // --- Components ---
 
-const ProductCard = ({ product }) => (
+const ProductCard = ({ product }: { product: Product }) => (
   <div className="group cursor-pointer flex flex-col h-full">
     <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-4">
       <img 
@@ -128,7 +152,7 @@ const ProductCard = ({ product }) => (
   </div>
 );
 
-const FeatureBanner = ({ title, subtitle, image, align = "left", dark = false }) => (
+const FeatureBanner = ({ title, subtitle, image, align = "left", dark = false }: FeatureBannerProps) => (
   <div className={`relative group overflow-hidden h-[500px] md:h-[650px] flex flex-col ${align === 'right' ? 'items-end text-right' : 'items-start text-left'} justify-end p-8 md:p-12 cursor-pointer`}>
     <img 
       src={image} 
